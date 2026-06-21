@@ -10,8 +10,10 @@ paginate = 20
   siteName      = "ListingSimply"
   tagline       = "מוצרי Apple יד שנייה — ישראל"
   description   = "לקנות ולמכור מכשירי Apple בישראל — בטוח, פשוט, ללא הרשמה"
-  adminTelegram = "@listingsimply_admin"
-  listingDays   = 15
+  adminTelegram    = "@listingsimply_admin"
+  listingDays      = 15
+  cloudinaryCloud  = "your-cloud-name"
+  cloudinaryPreset = "your-unsigned-preset"
 
 [markup.goldmark.renderer]
   unsafe = true

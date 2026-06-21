@@ -132,11 +132,21 @@
                 placeholder="תאר את המוצר: מה כלול, מצב הסוללה, שריטות, אחריות..."></textarea>
     </div>
 
-    <!-- Images -->
+    <!-- Images via Cloudinary -->
     <div class="form-group">
-      <label for="images">תמונות (אופציונלי, עד 4)</label>
-      <input type="file" id="images" name="images" accept="image/*" multiple>
-      <span class="field-hint">JPG, PNG — מקסימום 4 תמונות, 5MB כל אחת</span>
+      <label>תמונות (אופציונלי, עד 4)</label>
+      <input type="hidden" id="image_url_1" name="image_url_1">
+      <input type="hidden" id="image_url_2" name="image_url_2">
+      <input type="hidden" id="image_url_3" name="image_url_3">
+      <input type="hidden" id="image_url_4" name="image_url_4">
+      <button type="button" id="cloudinary-upload"
+              class="btn upload-btn"
+              data-cloud="{{ .Site.Params.cloudinaryCloud }}"
+              data-preset="{{ .Site.Params.cloudinaryPreset }}">
+        📷 הוסף תמונות
+      </button>
+      <div id="img-preview" class="img-preview"></div>
+      <span class="field-hint">JPG, PNG, HEIC — מקסימום 4 תמונות, 5MB כל אחת</span>
     </div>
 
     <button type="submit" class="btn btn-primary btn-submit">שלח מודעה לאישור</button>
@@ -151,5 +161,6 @@
   </div>
 </div>
 
+<script src="https://upload-widget.cloudinary.com/global/all.js"></script>
 <script src="{{ "js/app.js" | absURL }}"></script>
 {{ end }}

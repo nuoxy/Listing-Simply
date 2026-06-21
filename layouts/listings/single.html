@@ -15,6 +15,15 @@
 
     <div class="detail-price">{{ .Params.price }}</div>
 
+    <!-- Image gallery -->
+    {{- with .Params.images }}
+    <div class="listing-gallery">
+      {{- range . }}
+      <img src="{{ . }}" alt="" loading="lazy" class="gallery-img">
+      {{- end }}
+    </div>
+    {{- end }}
+
     <!-- QR Code — generated client-side from current URL -->
     <div class="qr-wrapper">
       <div id="qr-canvas"></div>
