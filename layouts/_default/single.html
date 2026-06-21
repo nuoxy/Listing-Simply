@@ -1,0 +1,12 @@
+{{ define "main" }}
+<div class="page-content">
+  <a href="{{ "/" | relURL }}" class="back-link">← חזרה</a>
+  <h1 class="page-title">{{ .Title }}</h1>
+  {{- with .Params.lastmod }}
+  <p class="page-date">עודכן לאחרונה: {{ . }}</p>
+  {{- end }}
+  <div class="prose">
+    {{ .Content }}
+  </div>
+</div>
+{{ end }}

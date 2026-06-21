@@ -479,6 +479,32 @@ button { font-family: var(--font); cursor: pointer; border: none; background: no
   font-size: .9rem;
 }
 
+/* ── Prose (privacy / terms pages) ──────────────────────── */
+.page-content { padding-top: 0; }
+
+.page-date {
+  font-size: .8rem;
+  color: var(--sub);
+  margin: -4px 0 16px;
+}
+
+.prose {
+  font-size: .93rem;
+  line-height: 1.7;
+  color: var(--text);
+}
+.prose h2 {
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 24px 0 8px;
+  letter-spacing: -.01em;
+}
+.prose p  { margin-bottom: 12px; }
+.prose ul { padding-right: 18px; margin-bottom: 12px; }
+.prose li { margin-bottom: 4px; }
+.prose strong { font-weight: 600; }
+.prose a  { color: var(--accent); text-decoration: underline; }
+
 /* ── Footer ──────────────────────────────────────────────── */
 .site-footer {
   text-align: center;
@@ -489,8 +515,20 @@ button { font-family: var(--font); cursor: pointer; border: none; background: no
 .footer-note {
   font-size: .75rem;
   color: var(--sub);
-  margin-bottom: 4px;
+  margin-bottom: 6px;
   line-height: 1.5;
+}
+.footer-links {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+  font-size: .78rem;
+  color: var(--sub);
+}
+.footer-links a {
+  color: var(--accent);
 }
 .footer-copy { font-size: .72rem; color: var(--border); }
 

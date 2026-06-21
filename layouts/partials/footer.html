@@ -1,4 +1,9 @@
 <footer class="site-footer">
   <p class="footer-note">מודעות פעילות למשך {{ .Site.Params.listingDays }} יום בלבד · ללא הרשמה · ישראל בלבד</p>
+  <nav class="footer-links" aria-label="קישורי תחתית">
+    <a href="{{ "/privacy/" | relURL }}">פרטיות</a>
+    <span aria-hidden="true">·</span>
+    <a href="{{ "/terms/" | relURL }}">תנאי שימוש</a>
+  </nav>
   <p class="footer-copy">© {{ now.Year }} {{ .Site.Params.siteName }}</p>
 </footer>
