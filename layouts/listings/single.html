@@ -1,5 +1,7 @@
 {{ define "main" }}
-{{- $daysLeft := math.Round (div (.ExpiryDate.Unix | float) 86400 | sub (div (now.Unix | float) 86400)) }}
+{{- $expiryDays := div (.ExpiryDate.Unix | float) 86400 }}
+{{- $nowDays    := div (now.Unix | float) 86400 }}
+{{- $daysLeft   := math.Round (sub $expiryDays $nowDays) }}
 
 <div class="page-single">
   <a href="{{ "/" | relURL }}" class="back-link">← חזרה</a>

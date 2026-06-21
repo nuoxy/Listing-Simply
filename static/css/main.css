@@ -441,6 +441,11 @@ button { font-family: var(--font); cursor: pointer; border: none; background: no
   direction: rtl;
 }
 
+.form-group input[type="number"] {
+  direction: ltr;
+  text-align: right;
+}
+
 .form-group input:focus,
 .form-group select:focus,
 .form-group textarea:focus {
