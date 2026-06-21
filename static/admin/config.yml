@@ -2,19 +2,15 @@ backend:
   name: git-gateway
   branch: main
 
-# Media (listing images committed to repo)
 media_folder: "static/images/listings"
 public_folder: "/images/listings"
-
-# Netlify Identity (invite-only — admin only)
-# Enable via Netlify Dashboard → Identity → Enable → Settings → Registration: Invite only
 
 collections:
   - name: "listings"
     label: "מודעות"
     label_singular: "מודעה"
     folder: "content/listings"
-    create: false        # Admin can only APPROVE, not create new listings
+    create: false        # Admin can only APPROVE, not create
     delete: true
     slug: "{{slug}}"
     editor:
@@ -23,6 +19,7 @@ collections:
       - { label: "כותרת", name: "title", widget: "string" }
       - { label: "מס׳ מודעה", name: "listing_no", widget: "string" }
       - { label: "תאריך פרסום", name: "date", widget: "datetime", format: "YYYY-MM-DDTHH:mm:ssZ" }
+      - { label: "תאריך פקיעה (15 ימים)", name: "expiryDate", widget: "datetime", format: "YYYY-MM-DDTHH:mm:ssZ" }
       - label: "מאושר ✅"
         name: "approved"
         widget: "boolean"
@@ -38,7 +35,7 @@ collections:
       - { label: "מצב", name: "condition", widget: "string" }
       - { label: "מחיר", name: "price", widget: "string" }
       - { label: "עיר", name: "location", widget: "string" }
-      - { label: "טלגרם", name: "telegram", widget: "string" }
+      - { label: "טלגרם", name: "telegram_username", widget: "string" }
       - label: "תמונות"
         name: "images"
         widget: "list"

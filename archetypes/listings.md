@@ -2,6 +2,7 @@
 title: ""
 listing_no: "LS-000000"
 date: {{ .Date }}
+expiryDate: {{ .Date.AddDate 0 0 15 }}
 approved: false
 price: ""
 condition: ""
@@ -10,7 +11,7 @@ model: ""
 storage: ""
 color: ""
 location: ""
-telegram: ""
+telegram_username: ""
 images: []
 ---
 

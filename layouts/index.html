@@ -1,15 +1,6 @@
 {{ define "main" }}
-{{- $now := now }}
 {{- $allListings := where .Site.RegularPages "Section" "listings" }}
-{{- $approved := where $allListings "Params.approved" true }}
-
-{{- $active := slice }}
-{{- range $approved }}
-  {{- $expiry := .Date.AddDate 0 0 15 }}
-  {{- if $expiry.After $now }}
-    {{- $active = $active | append . }}
-  {{- end }}
-{{- end }}
+{{- $active := where $allListings "Params.approved" true }}
 
 <div class="page-home">
   <div class="hero">
@@ -34,7 +25,7 @@
     {{- end }}
   </div>
 
-  <!-- Listings grid -->
+  <!-- Listings grid — Hugo's expiryDate already excludes expired pages -->
   {{- if $active }}
   <div class="listings-grid" id="listings-grid">
     {{- range sort $active "Date" "desc" }}

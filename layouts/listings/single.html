@@ -1,16 +1,10 @@
 {{ define "main" }}
-{{- $expiry := .Date.AddDate 0 0 15 }}
-{{- $isExpired := not ($expiry.After now) }}
-{{- $daysLeft := math.Round (div ($expiry.Unix | float) 86400 | sub (div (now.Unix | float) 86400)) }}
+{{- $daysLeft := math.Round (div (.ExpiryDate.Unix | float) 86400 | sub (div (now.Unix | float) 86400)) }}
 
 <div class="page-single">
   <a href="{{ "/" | relURL }}" class="back-link">← חזרה</a>
 
-  {{- if $isExpired }}
-  <div class="expired-banner">מודעה זו פגה תוקף</div>
-  {{- end }}
-
-  <div class="listing-detail {{ if $isExpired }}is-expired{{ end }}">
+  <div class="listing-detail">
 
     <div class="detail-head">
       <span class="badge badge-category">{{ .Params.category }}</span>
@@ -21,7 +15,7 @@
 
     <div class="detail-price">{{ .Params.price }}</div>
 
-    <!-- QR Code -->
+    <!-- QR Code — generated client-side from current URL -->
     <div class="qr-wrapper">
       <div id="qr-canvas"></div>
       <p class="qr-label">סרוק לשיתוף מהיר</p>
@@ -59,9 +53,8 @@
       </div>
       <div class="detail-row">
         <dt>תוקף עד</dt>
-        <dd class="{{ if $isExpired }}text-expired{{ else if le $daysLeft 3.0 }}text-urgent{{ end }}">
-          {{ $expiry.Format "02.01.2006" }}
-          {{- if not $isExpired }} ({{ $daysLeft | int }} ימים){{ end }}
+        <dd class="{{ if le $daysLeft 3.0 }}text-urgent{{ end }}">
+          {{ .ExpiryDate.Format "02.01.2006" }} ({{ $daysLeft | int }} ימים)
         </dd>
       </div>
     </dl>
@@ -74,10 +67,9 @@
     </div>
     {{- end }}
 
-    <!-- Action buttons -->
-    {{- if not $isExpired }}
+    <!-- Telegram buttons — only contact method -->
     <div class="action-btns">
-      {{- with .Params.telegram }}
+      {{- with .Params.telegram_username }}
       <a href="https://t.me/{{ . | strings.TrimPrefix "@" }}"
          target="_blank" rel="noopener noreferrer"
          class="btn btn-contact">
@@ -93,7 +85,6 @@
         שתף בטלגרם
       </a>
     </div>
-    {{- end }}
 
     <p class="listing-no-footer">מס׳ מודעה: {{ .Params.listing_no }}</p>
   </div>

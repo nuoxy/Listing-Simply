@@ -1,5 +1,4 @@
-{{- $expiry := .Date.AddDate 0 0 15 }}
-{{- $daysLeft := math.Round (div ($expiry.Unix | float) 86400 | sub (div (now.Unix | float) 86400)) }}
+{{- $daysLeft := math.Round (div (.ExpiryDate.Unix | float) 86400 | sub (div (now.Unix | float) 86400)) }}
 <article class="listing-card" data-category="{{ .Params.category }}">
   <a href="{{ .Permalink }}" class="card-link">
     <div class="card-top">

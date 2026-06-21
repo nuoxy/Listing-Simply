@@ -1,17 +1,17 @@
-name: Deploy to GitHub Pages
+name: Daily Listing Cleanup and Build
 
 on:
   push:
     branches: [main]
   schedule:
-    # Rebuild daily at 03:00 UTC to drop expired 15-day listings
-    - cron: "0 3 * * *"
+    # Runs every day at midnight UTC (03:00 Israel time)
+    - cron: "0 0 * * *"
   workflow_dispatch:
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write   # git commit/push expired deletions
+  pages: write      # GitHub Pages deployment
+  id-token: write   # GitHub Pages OIDC token
 
 concurrency:
   group: pages
@@ -21,7 +21,50 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"   # blueprint had typo: python-node-version
+
+      - name: Delete Expired Listing Files
+        run: |
+          python -c "
+          import os, re, datetime
+
+          directory = 'content/listings'
+          now = datetime.datetime.now(datetime.timezone.utc)
+
+          if os.path.exists(directory):
+              for filename in os.listdir(directory):
+                  if filename.endswith('.md'):
+                      filepath = os.path.join(directory, filename)
+                      with open(filepath, 'r', encoding='utf-8') as f:
+                          content = f.read()
+
+                      match = re.search(r'expiryDate:\s*([0-9T:\-+Z]+)', content)
+                      if match:
+                          try:
+                              expiry_str = match.group(1).split('+')[0].split('Z')[0]
+                              expiry_date = datetime.datetime.fromisoformat(expiry_str).replace(tzinfo=datetime.timezone.utc)
+                              if now > expiry_date:
+                                  os.remove(filepath)
+                                  print(f'Deleted expired listing: {filename}')
+                          except Exception as e:
+                              print(f'Error parsing {filename}: {e}')
+          "
+
+      - name: Commit Deleted Expired Files
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add content/listings/
+          git diff --quiet && git diff --staged --quiet || \
+            (git commit -m "Automated cleanup of expired listings" && git push)
 
       - name: Setup Hugo
         uses: peaceiris/actions-hugo@v3
@@ -29,10 +72,10 @@ jobs:
           hugo-version: "0.126.0"
           extended: false
 
-      - name: Build
-        run: hugo --minify --baseURL "${{ steps.pages.outputs.base_url }}/"
+      - name: Build Static Site
+        run: hugo --gc --minify
 
-      - name: Upload artifact
+      - name: Upload Pages Artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: ./public
