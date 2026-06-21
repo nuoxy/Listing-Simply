@@ -1,0 +1,30 @@
+{{ define "main" }}
+{{- $now := now }}
+{{- $approved := where .Pages "Params.approved" true }}
+
+{{- $active := slice }}
+{{- range $approved }}
+  {{- $expiry := .Date.AddDate 0 0 15 }}
+  {{- if $expiry.After $now }}
+    {{- $active = $active | append . }}
+  {{- end }}
+{{- end }}
+
+<div class="page-list">
+  <h1 class="page-title">כל המודעות</h1>
+
+  {{- if $active }}
+  <div class="listings-grid">
+    {{- range sort $active "Date" "desc" }}
+      {{ partial "listing-card.html" . }}
+    {{- end }}
+  </div>
+  {{- else }}
+  <div class="empty-state">
+    <p class="empty-icon">📭</p>
+    <p class="empty-title">אין מודעות פעילות</p>
+    <a href="{{ "/submit/" | relURL }}" class="btn btn-primary">הגש מודעה</a>
+  </div>
+  {{- end }}
+</div>
+{{ end }}

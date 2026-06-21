@@ -1,0 +1,23 @@
+{{- $expiry := .Date.AddDate 0 0 15 }}
+{{- $daysLeft := math.Round (div ($expiry.Unix | float) 86400 | sub (div (now.Unix | float) 86400)) }}
+<article class="listing-card" data-category="{{ .Params.category }}">
+  <a href="{{ .Permalink }}" class="card-link">
+    <div class="card-top">
+      <span class="badge badge-category">{{ .Params.category }}</span>
+      <span class="listing-no">{{ .Params.listing_no }}</span>
+    </div>
+    <h2 class="card-title">{{ .Title }}</h2>
+    <div class="card-meta">
+      <span class="price">{{ .Params.price }}</span>
+      <span class="condition">{{ .Params.condition }}</span>
+    </div>
+    <div class="card-footer">
+      <span class="location">{{ .Params.location }}</span>
+      <span class="days-left {{ if le $daysLeft 3.0 }}urgent{{ end }}">
+        {{- if le $daysLeft 1.0 }}יום אחרון!
+        {{- else }}{{ $daysLeft | int }} ימים
+        {{- end }}
+      </span>
+    </div>
+  </a>
+</article>

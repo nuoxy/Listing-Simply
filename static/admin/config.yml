@@ -1,0 +1,47 @@
+backend:
+  name: git-gateway
+  branch: main
+
+# Media (listing images committed to repo)
+media_folder: "static/images/listings"
+public_folder: "/images/listings"
+
+# Netlify Identity (invite-only — admin only)
+# Enable via Netlify Dashboard → Identity → Enable → Settings → Registration: Invite only
+
+collections:
+  - name: "listings"
+    label: "מודעות"
+    label_singular: "מודעה"
+    folder: "content/listings"
+    create: false        # Admin can only APPROVE, not create new listings
+    delete: true
+    slug: "{{slug}}"
+    editor:
+      preview: false
+    fields:
+      - { label: "כותרת", name: "title", widget: "string" }
+      - { label: "מס׳ מודעה", name: "listing_no", widget: "string" }
+      - { label: "תאריך פרסום", name: "date", widget: "datetime", format: "YYYY-MM-DDTHH:mm:ssZ" }
+      - label: "מאושר ✅"
+        name: "approved"
+        widget: "boolean"
+        default: false
+        hint: "סמן כמאושר כדי לפרסם את המודעה"
+      - label: "קטגוריה"
+        name: "category"
+        widget: "select"
+        options: ["iPhone", "iPad", "Mac", "Apple Watch", "AirPods", "אחר"]
+      - { label: "דגם", name: "model", widget: "string", required: false }
+      - { label: "נפח", name: "storage", widget: "string", required: false }
+      - { label: "צבע", name: "color", widget: "string", required: false }
+      - { label: "מצב", name: "condition", widget: "string" }
+      - { label: "מחיר", name: "price", widget: "string" }
+      - { label: "עיר", name: "location", widget: "string" }
+      - { label: "טלגרם", name: "telegram", widget: "string" }
+      - label: "תמונות"
+        name: "images"
+        widget: "list"
+        required: false
+        field: { label: "תמונה", name: "image", widget: "image" }
+      - { label: "תיאור", name: "body", widget: "markdown" }

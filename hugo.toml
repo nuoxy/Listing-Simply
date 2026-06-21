@@ -1,0 +1,22 @@
+baseURL = "/"
+languageCode = "he"
+defaultContentLanguage = "he"
+title = "ListingSimply"
+enableRobotsTXT = true
+disableKinds = ["taxonomy", "term", "RSS"]
+paginate = 20
+
+[params]
+  siteName      = "ListingSimply"
+  tagline       = "מוצרי Apple יד שנייה — ישראל"
+  description   = "לקנות ולמכור מכשירי Apple בישראל — בטוח, פשוט, ללא הרשמה"
+  adminTelegram = "@listingsimply_admin"
+  listingDays   = 15
+
+[markup.goldmark.renderer]
+  unsafe = true
+
+[outputs]
+  home    = ["HTML"]
+  page    = ["HTML"]
+  section = ["HTML"]

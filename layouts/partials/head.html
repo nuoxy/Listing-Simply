@@ -1,0 +1,47 @@
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#f5f5f7">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="format-detection" content="telephone=no">
+
+<title>
+  {{- if .IsHome }}{{ .Site.Params.siteName }} | {{ .Site.Params.tagline }}
+  {{- else }}{{ .Title }} | {{ .Site.Params.siteName }}
+  {{- end -}}
+</title>
+
+<meta name="description" content="{{ with .Params.description }}{{ . }}{{ else }}{{ .Site.Params.description }}{{ end }}">
+<meta name="robots" content="index, follow">
+
+{{- with .Params.listing_no }}
+<meta name="listing-no" content="{{ . }}">
+{{- end }}
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="{{ .Site.Params.siteName }}">
+<meta property="og:title" content="{{ .Title }}">
+<meta property="og:description" content="{{ with .Params.description }}{{ . }}{{ else }}{{ .Site.Params.description }}{{ end }}">
+<meta property="og:locale" content="he_IL">
+
+<link rel="canonical" href="{{ .Permalink }}">
+
+<!-- Favicon: Apple  -->
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍎</text></svg>">
+
+<link rel="stylesheet" href="{{ "css/main.css" | absURL }}">
+
+<!-- Netlify Identity (required for Decap CMS admin login) -->
+<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+<script>
+  if (window.netlifyIdentity) {
+    window.netlifyIdentity.on('init', function(user) {
+      if (!user) {
+        window.netlifyIdentity.on('login', function() {
+          document.location.href = '/admin/';
+        });
+      }
+    });
+  }
+</script>

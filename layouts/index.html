@@ -1,0 +1,53 @@
+{{ define "main" }}
+{{- $now := now }}
+{{- $allListings := where .Site.RegularPages "Section" "listings" }}
+{{- $approved := where $allListings "Params.approved" true }}
+
+{{- $active := slice }}
+{{- range $approved }}
+  {{- $expiry := .Date.AddDate 0 0 15 }}
+  {{- if $expiry.After $now }}
+    {{- $active = $active | append . }}
+  {{- end }}
+{{- end }}
+
+<div class="page-home">
+  <div class="hero">
+    <p class="hero-sub">{{ .Site.Params.tagline }}</p>
+  </div>
+
+  <!-- Category filter chips -->
+  <div class="filter-bar" role="group" aria-label="סינון לפי קטגוריה">
+    <button class="chip active" data-filter="all">הכל <span class="chip-count">{{ len $active }}</span></button>
+    {{- $categories := slice "iPhone" "iPad" "Mac" "Apple Watch" "AirPods" "אחר" }}
+    {{- range $categories }}
+      {{- $cat := . }}
+      {{- $count := 0 }}
+      {{- range $active }}
+        {{- if eq .Params.category $cat }}
+          {{- $count = add $count 1 }}
+        {{- end }}
+      {{- end }}
+      {{- if gt $count 0 }}
+      <button class="chip" data-filter="{{ $cat }}">{{ $cat }} <span class="chip-count">{{ $count }}</span></button>
+      {{- end }}
+    {{- end }}
+  </div>
+
+  <!-- Listings grid -->
+  {{- if $active }}
+  <div class="listings-grid" id="listings-grid">
+    {{- range sort $active "Date" "desc" }}
+      {{ partial "listing-card.html" . }}
+    {{- end }}
+  </div>
+  {{- else }}
+  <div class="empty-state">
+    <p class="empty-icon">📭</p>
+    <p class="empty-title">אין מודעות פעילות</p>
+    <p class="empty-sub">היה הראשון למכור מוצר Apple!</p>
+    <a href="{{ "/submit/" | relURL }}" class="btn btn-primary">הגש מודעה</a>
+  </div>
+  {{- end }}
+</div>
+{{ end }}

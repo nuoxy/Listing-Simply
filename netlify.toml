@@ -1,0 +1,31 @@
+[build]
+  publish   = "public"
+  command   = "hugo --minify"
+
+[build.environment]
+  HUGO_VERSION = "0.126.0"
+  NODE_ENV     = "production"
+
+# Scheduled rebuild daily (keeps expired listings out)
+# Enable in Netlify dashboard → Build hooks → trigger daily
+# Or use Netlify's scheduled functions
+
+[[redirects]]
+  from   = "/admin"
+  to     = "/admin/"
+  status = 301
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options            = "DENY"
+    X-Content-Type-Options     = "nosniff"
+    Referrer-Policy            = "no-referrer"
+    Permissions-Policy         = "camera=(), microphone=(), geolocation=(), payment=()"
+    Content-Security-Policy    = "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://identity.netlify.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://api.netlify.com https://registry.netlify.com; frame-src 'none'; object-src 'none'; base-uri 'self'"
+    Strict-Transport-Security  = "max-age=63072000; includeSubDomains; preload"
+
+[[headers]]
+  for = "/admin/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"

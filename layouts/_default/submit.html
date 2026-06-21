@@ -1,0 +1,155 @@
+{{ define "main" }}
+<div class="page-submit">
+  <a href="{{ "/" | relURL }}" class="back-link">← חזרה</a>
+  <h1 class="page-title">הגש מודעה</h1>
+  <p class="submit-note">המודעה תבדק ותאושר ע"י הנהל תוך 24 שעות. תוקף: {{ .Site.Params.listingDays }} ימים.</p>
+
+  <form
+    name="listing-submission"
+    method="POST"
+    enctype="multipart/form-data"
+    data-netlify="true"
+    netlify-honeypot="bot-field"
+    action="/submit/?thanks=1"
+    class="submit-form"
+    id="submit-form"
+  >
+    <!-- Anti-spam -->
+    <p class="hidden" aria-hidden="true">
+      <label>אל תמלא שדה זה: <input name="bot-field" tabindex="-1" autocomplete="off"></label>
+    </p>
+    <input type="hidden" name="form-name" value="listing-submission">
+
+    <!-- Category -->
+    <div class="form-group">
+      <label for="category">קטגוריה *</label>
+      <select id="category" name="category" required>
+        <option value="" disabled selected>בחר קטגוריה</option>
+        <option value="iPhone">iPhone</option>
+        <option value="iPad">iPad</option>
+        <option value="Mac">Mac (MacBook / iMac / Mac mini)</option>
+        <option value="Apple Watch">Apple Watch</option>
+        <option value="AirPods">AirPods</option>
+        <option value="אחר">אחר (אביזרים, Apple TV וכד')</option>
+      </select>
+    </div>
+
+    <!-- Title -->
+    <div class="form-group">
+      <label for="title">כותרת המודעה *</label>
+      <input type="text" id="title" name="title" required maxlength="80"
+             placeholder="למשל: iPhone 15 Pro 256GB כחול טיטניום">
+    </div>
+
+    <!-- Model -->
+    <div class="form-group">
+      <label for="model">דגם *</label>
+      <input type="text" id="model" name="model" required maxlength="60"
+             placeholder='למשל: iPhone 15 Pro'>
+    </div>
+
+    <!-- Storage -->
+    <div class="form-group">
+      <label for="storage">נפח אחסון</label>
+      <select id="storage" name="storage">
+        <option value="">לא רלוונטי</option>
+        <option value="64GB">64GB</option>
+        <option value="128GB">128GB</option>
+        <option value="256GB">256GB</option>
+        <option value="512GB">512GB</option>
+        <option value="1TB">1TB</option>
+        <option value="2TB">2TB</option>
+      </select>
+    </div>
+
+    <!-- Color -->
+    <div class="form-group">
+      <label for="color">צבע</label>
+      <input type="text" id="color" name="color" maxlength="40"
+             placeholder='למשל: שחור טיטניום'>
+    </div>
+
+    <!-- Condition -->
+    <div class="form-group">
+      <label for="condition">מצב *</label>
+      <select id="condition" name="condition" required>
+        <option value="" disabled selected>בחר מצב</option>
+        <option value="חדש">חדש (חתום)</option>
+        <option value="כמו חדש">כמו חדש</option>
+        <option value="טוב מאוד">טוב מאוד</option>
+        <option value="טוב">טוב</option>
+        <option value="סביר">סביר</option>
+      </select>
+    </div>
+
+    <!-- Price -->
+    <div class="form-group">
+      <label for="price">מחיר (₪) *</label>
+      <input type="number" id="price" name="price" required min="1" max="999999"
+             placeholder="3500">
+    </div>
+
+    <!-- Location -->
+    <div class="form-group">
+      <label for="location">עיר *</label>
+      <select id="location" name="location" required>
+        <option value="" disabled selected>בחר עיר</option>
+        <option>תל אביב-יפו</option>
+        <option>ירושלים</option>
+        <option>חיפה</option>
+        <option>ראשון לציון</option>
+        <option>פתח תקווה</option>
+        <option>אשדוד</option>
+        <option>נתניה</option>
+        <option>בני ברק</option>
+        <option>באר שבע</option>
+        <option>חולון</option>
+        <option>רמת גן</option>
+        <option>אשקלון</option>
+        <option>רחובות</option>
+        <option>בת ים</option>
+        <option>הרצליה</option>
+        <option>כפר סבא</option>
+        <option>מודיעין-מכבים-רעות</option>
+        <option>ראש העין</option>
+        <option>אחר</option>
+      </select>
+    </div>
+
+    <!-- Telegram -->
+    <div class="form-group">
+      <label for="telegram">שם משתמש בטלגרם *</label>
+      <input type="text" id="telegram" name="telegram" required maxlength="32"
+             placeholder="@username" pattern="@?[a-zA-Z0-9_]{5,32}">
+      <span class="field-hint">הקונים יפנו אליך דרך טלגרם בלבד</span>
+    </div>
+
+    <!-- Description -->
+    <div class="form-group">
+      <label for="description">תיאור *</label>
+      <textarea id="description" name="description" required
+                rows="5" maxlength="1200"
+                placeholder="תאר את המוצר: מה כלול, מצב הסוללה, שריטות, אחריות..."></textarea>
+    </div>
+
+    <!-- Images -->
+    <div class="form-group">
+      <label for="images">תמונות (אופציונלי, עד 4)</label>
+      <input type="file" id="images" name="images" accept="image/*" multiple>
+      <span class="field-hint">JPG, PNG — מקסימום 4 תמונות, 5MB כל אחת</span>
+    </div>
+
+    <button type="submit" class="btn btn-primary btn-submit">שלח מודעה לאישור</button>
+  </form>
+
+  <!-- Success message (hidden, shown after JS redirect) -->
+  <div class="submit-success hidden" id="submit-success">
+    <p class="success-icon">✅</p>
+    <h2>המודעה נשלחה!</h2>
+    <p>נבדוק את המודעה ונפרסם אותה תוך 24 שעות.</p>
+    <a href="{{ "/" | relURL }}" class="btn btn-primary">חזרה לדף הבית</a>
+  </div>
+</div>
+
+<script src="{{ "js/app.js" | absURL }}"></script>
+{{ end }}
