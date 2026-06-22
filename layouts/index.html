@@ -7,6 +7,37 @@
     <p class="hero-sub">{{ .Site.Params.tagline }}</p>
   </div>
 
+  <!-- Search bar -->
+  <div class="search-wrap">
+    <input id="listing-search" type="search" placeholder="חפש מוצר, דגם, עיר..." autocomplete="off" dir="rtl">
+  </div>
+
+  <!-- Sort + location row -->
+  <div class="sort-location-bar">
+    <select id="sort-select">
+      <option value="date-desc">חדש לישן</option>
+      <option value="price-asc">מחיר: נמוך לגבוה</option>
+      <option value="price-desc">מחיר: גבוה לנמוך</option>
+      <option value="expiry-asc">פג תוקף ראשון</option>
+    </select>
+    <select id="location-select">
+      <option value="all">כל הערים</option>
+      {{- $locs := slice }}
+      {{- range $active }}{{- $locs = $locs | append .Params.location }}{{- end }}
+      {{- range ($locs | uniq | sort) }}
+      <option value="{{ . }}">{{ . }}</option>
+      {{- end }}
+    </select>
+  </div>
+
+  <!-- Condition filter chips -->
+  <div class="filter-bar condition-bar" id="condition-bar" role="group" aria-label="סינון לפי מצב">
+    <button class="chip active" data-condition="all">כל המצבים</button>
+    {{- range slice "כמו חדש" "טוב מאוד" "טוב" "סביר" }}
+    <button class="chip" data-condition="{{ . }}">{{ . }}</button>
+    {{- end }}
+  </div>
+
   <!-- Category filter chips -->
   <div class="filter-bar" role="group" aria-label="סינון לפי קטגוריה">
     <button class="chip active" data-filter="all">הכל <span class="chip-count">{{ len $active }}</span></button>
@@ -31,6 +62,11 @@
     {{- range sort $active "Date" "desc" }}
       {{ partial "listing-card.html" . }}
     {{- end }}
+  </div>
+  <div id="no-results" class="empty-state" style="display:none">
+    <p class="empty-icon">🔍</p>
+    <p class="empty-title">אין תוצאות</p>
+    <p class="empty-sub">נסה לשנות את פרמטרי החיפוש</p>
   </div>
   {{- else }}
   <div class="empty-state">

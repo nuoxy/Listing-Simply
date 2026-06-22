@@ -1,24 +1,88 @@
 (function () {
   'use strict';
 
-  // ── Category filter chips ─────────────────────────────────
-  var filterBar = document.querySelector('.filter-bar');
-  if (filterBar) {
-    filterBar.addEventListener('click', function (e) {
-      var chip = e.target.closest('.chip');
-      if (!chip) return;
+  // ── Unified filter + sort ─────────────────────────────────
+  var grid = document.getElementById('listings-grid');
+  if (grid) {
+    var allCards = Array.from(grid.querySelectorAll('.listing-card'));
+    var state = { category: 'all', condition: 'all', location: 'all', search: '', sort: 'date-desc' };
 
-      filterBar.querySelectorAll('.chip').forEach(function (c) {
-        c.classList.remove('active');
+    function applyFilters() {
+      var term = state.search.trim().toLowerCase();
+      var visible = allCards.filter(function (card) {
+        if (state.category !== 'all' && card.dataset.category !== state.category) return false;
+        if (state.condition !== 'all' && card.dataset.condition !== state.condition) return false;
+        if (state.location !== 'all' && card.dataset.location !== state.location) return false;
+        if (term) {
+          var hay = (card.dataset.title || '') + ' ' + (card.dataset.location || '');
+          if (hay.indexOf(term) === -1) return false;
+        }
+        return true;
       });
-      chip.classList.add('active');
 
-      var filter = chip.dataset.filter;
-      document.querySelectorAll('.listing-card').forEach(function (card) {
-        var show = filter === 'all' || card.dataset.category === filter;
-        card.style.display = show ? '' : 'none';
+      visible.sort(function (a, b) {
+        switch (state.sort) {
+          case 'price-asc':  return +a.dataset.price - +b.dataset.price;
+          case 'price-desc': return +b.dataset.price - +a.dataset.price;
+          case 'expiry-asc': return +a.dataset.expiry - +b.dataset.expiry;
+          default:           return +b.dataset.date - +a.dataset.date;
+        }
       });
-    });
+
+      allCards.forEach(function (c) { c.style.display = 'none'; });
+      visible.forEach(function (c) { c.style.display = ''; grid.appendChild(c); });
+
+      var noResults = document.getElementById('no-results');
+      if (noResults) noResults.style.display = visible.length === 0 ? '' : 'none';
+    }
+
+    // Category chips
+    var filterBar = document.querySelector('.filter-bar:not(#condition-bar)');
+    if (filterBar) {
+      filterBar.addEventListener('click', function (e) {
+        var chip = e.target.closest('.chip');
+        if (!chip) return;
+        filterBar.querySelectorAll('.chip').forEach(function (c) { c.classList.remove('active'); });
+        chip.classList.add('active');
+        state.category = chip.dataset.filter;
+        applyFilters();
+      });
+    }
+
+    // Condition chips
+    var condBar = document.getElementById('condition-bar');
+    if (condBar) {
+      condBar.addEventListener('click', function (e) {
+        var chip = e.target.closest('.chip');
+        if (!chip) return;
+        condBar.querySelectorAll('.chip').forEach(function (c) { c.classList.remove('active'); });
+        chip.classList.add('active');
+        state.condition = chip.dataset.condition;
+        applyFilters();
+      });
+    }
+
+    // Sort select
+    var sortSel = document.getElementById('sort-select');
+    if (sortSel) {
+      sortSel.addEventListener('change', function () { state.sort = this.value; applyFilters(); });
+    }
+
+    // Location select
+    var locSel = document.getElementById('location-select');
+    if (locSel) {
+      locSel.addEventListener('change', function () { state.location = this.value; applyFilters(); });
+    }
+
+    // Search input (debounced 200 ms)
+    var searchInput = document.getElementById('listing-search');
+    if (searchInput) {
+      var debounceTimer;
+      searchInput.addEventListener('input', function () {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(function () { state.search = searchInput.value; applyFilters(); }, 200);
+      });
+    }
   }
 
   // ── Submit form: success state + Cloudinary upload widget ─

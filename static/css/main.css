@@ -105,6 +105,57 @@ button { font-family: var(--font); cursor: pointer; border: none; background: no
   font-size: .92rem;
 }
 
+/* ── Search bar ──────────────────────────────────────────── */
+.search-wrap {
+  padding: 0 0 10px;
+}
+#listing-search {
+  width: 100%;
+  padding: 11px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  font-family: var(--font);
+  font-size: .95rem;
+  color: var(--text);
+  background: var(--card);
+  appearance: none;
+  -webkit-appearance: none;
+  transition: border-color .2s;
+  direction: rtl;
+}
+#listing-search:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+#listing-search::placeholder { color: var(--sub); }
+
+/* ── Sort + Location row ─────────────────────────────────── */
+.sort-location-bar {
+  display: flex;
+  gap: 8px;
+  padding: 0 0 10px;
+}
+#sort-select,
+#location-select {
+  flex: 1;
+  padding: 9px 12px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-family: var(--font);
+  font-size: .85rem;
+  color: var(--text);
+  background: var(--card);
+  appearance: none;
+  -webkit-appearance: none;
+  direction: rtl;
+  cursor: pointer;
+}
+#sort-select:focus,
+#location-select:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
 /* ── Filter chips ────────────────────────────────────────── */
 .filter-bar {
   display: flex;

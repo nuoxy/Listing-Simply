@@ -1,7 +1,14 @@
 {{- $expiryDays := div (.ExpiryDate.Unix | float) 86400 }}
 {{- $nowDays    := div (now.Unix | float) 86400 }}
 {{- $daysLeft   := math.Round (sub $expiryDays $nowDays) }}
-<article class="listing-card" data-category="{{ .Params.category }}">
+<article class="listing-card"
+  data-category="{{ .Params.category }}"
+  data-condition="{{ .Params.condition }}"
+  data-location="{{ .Params.location }}"
+  data-title="{{ .Title | lower }}"
+  data-price="{{ .Params.price | replaceRE `[^\d]` `` }}"
+  data-date="{{ .Date.Unix }}"
+  data-expiry="{{ .ExpiryDate.Unix }}">
   <a href="{{ .Permalink }}" class="card-link">
     {{- with .Params.images }}{{- with index . 0 }}
     <div class="card-thumb">
