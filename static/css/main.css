@@ -317,6 +317,27 @@ button { font-family: var(--font); cursor: pointer; border: none; background: no
   color: var(--text);
   border: 1.5px solid var(--border);
 }
+.btn-whatsapp {
+  background: #25D366;
+  color: #fff;
+}
+.btn-copy {
+  background: var(--card);
+  color: var(--text);
+  border: 1.5px solid var(--border);
+}
+
+.share-row {
+  display: flex;
+  gap: 8px;
+}
+.share-row .btn {
+  flex: 1;
+  width: auto;
+  padding: 11px 6px;
+  font-size: .8rem;
+  gap: 5px;
+}
 
 /* ── Single Listing ──────────────────────────────────────── */
 .page-single { padding-top: 0; }
@@ -444,8 +465,62 @@ button { font-family: var(--font); cursor: pointer; border: none; background: no
   text-align: center;
   font-size: .75rem;
   color: var(--sub);
-  padding: 8px 0 24px;
+  padding: 8px 0 16px;
   font-variant-numeric: tabular-nums;
+}
+
+/* ── Sold Report ─────────────────────────────────────────── */
+.sold-report {
+  border-top: 1px solid var(--border);
+  padding: 14px 0 20px;
+}
+.sold-summary {
+  font-size: .82rem;
+  color: var(--sub);
+  cursor: pointer;
+  user-select: none;
+  list-style: none;
+}
+.sold-summary::-webkit-details-marker { display: none; }
+.sold-summary::before { content: "▸ "; }
+details[open] .sold-summary::before { content: "▾ "; }
+.sold-note {
+  font-size: .8rem;
+  color: var(--sub);
+  margin: 10px 0 8px;
+}
+.sold-fields {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.sold-input {
+  flex: 1;
+  padding: 10px 12px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-family: var(--font);
+  font-size: .9rem;
+  direction: rtl;
+  background: var(--card);
+  color: var(--text);
+}
+.sold-input:focus { outline: none; border-color: var(--accent); }
+.btn-sold {
+  background: var(--red);
+  color: #fff;
+  padding: 10px 16px;
+  border-radius: var(--radius-sm);
+  font-size: .9rem;
+  font-weight: 600;
+  width: auto;
+  flex-shrink: 0;
+}
+.sold-success {
+  font-size: .9rem;
+  color: var(--green);
+  font-weight: 500;
+  padding: 10px 0 4px;
 }
 
 /* ── Submit Form ─────────────────────────────────────────── */
@@ -601,6 +676,8 @@ button { font-family: var(--font); cursor: pointer; border: none; background: no
 }
 .listing-gallery::-webkit-scrollbar { display: none; }
 
+.gallery-thumb-link { display: contents; }
+
 .gallery-img {
   height: 240px;
   width: auto;
@@ -610,6 +687,48 @@ button { font-family: var(--font); cursor: pointer; border: none; background: no
   flex-shrink: 0;
   object-fit: cover;
   scroll-snap-align: start;
+}
+
+/* ── Image Lightbox ──────────────────────────────────────── */
+.lightbox {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  background: rgba(0,0,0,.93);
+  align-items: center;
+  justify-content: center;
+}
+.lightbox:target { display: flex; }
+.lightbox-backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+.lightbox-img {
+  max-width: 96vw;
+  max-height: 90dvh;
+  object-fit: contain;
+  border-radius: 6px;
+  display: block;
+  position: relative;
+  z-index: 1;
+}
+.lightbox-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  color: #fff;
+  font-size: 1.1rem;
+  z-index: 2;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255,255,255,.18);
+  border-radius: 50%;
+  line-height: 1;
 }
 
 /* ── Card Thumbnail ──────────────────────────────────────── */
