@@ -19,17 +19,19 @@
 
     <!-- Image gallery with tap-to-fullscreen lightbox -->
     {{- with .Params.images }}
+    {{- $imgAlt := $.Params.model | default $.Title }}
+    {{- with $.Params.storage }}{{- $imgAlt = print $imgAlt " " . }}{{- end }}
     <div class="listing-gallery">
       {{- range $i, $url := . }}
       <a href="#lb-{{ $i }}" class="gallery-thumb-link">
-        <img src="{{ $url }}" alt="" loading="lazy" class="gallery-img">
+        <img src="{{ $url }}" alt="{{ $imgAlt }} — תמונה {{ add $i 1 }}" loading="lazy" class="gallery-img">
       </a>
       {{- end }}
     </div>
     {{- range $i, $url := . }}
     <div id="lb-{{ $i }}" class="lightbox" role="dialog" aria-modal="true">
       <a href="#_" class="lightbox-backdrop" aria-label="סגור"></a>
-      <img src="{{ $url }}" alt="" class="lightbox-img">
+      <img src="{{ $url }}" alt="{{ $imgAlt }}" class="lightbox-img">
       <a href="#_" class="lightbox-close" aria-label="סגור">✕</a>
     </div>
     {{- end }}

@@ -799,6 +799,36 @@ details[open] .sold-summary::before { content: "▾ "; }
   line-height: 1;
 }
 
+/* ── SEO category nav (homepage + footer) ───────────────── */
+.seo-cat-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 10px;
+  padding: 0 16px 12px;
+}
+.seo-cat-link {
+  font-size: .78rem;
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* ── Hero title (used on category term pages) ────────────── */
+.hero-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: -.02em;
+  color: var(--text);
+}
+
+/* ── Back link on category pages ────────────────────────── */
+.cat-back {
+  display: block;
+  padding: 0 16px 12px;
+  font-size: .85rem;
+  color: var(--accent);
+}
+
 /* ── Desktop: keep mobile frame ──────────────────────────── */
 @media (min-width: 431px) {
   body {
