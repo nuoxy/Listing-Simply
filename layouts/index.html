@@ -39,7 +39,7 @@
   </div>
 
   <!-- Category filter chips -->
-  <div class="filter-bar" role="group" aria-label="סינון לפי קטגוריה">
+  <div class="filter-bar" id="category-bar" role="group" aria-label="סינון לפי קטגוריה">
     <button class="chip active" data-filter="all">הכל <span class="chip-count">{{ len $active }}</span></button>
     {{- $categories := slice "iPhone" "iPad" "Mac" "Apple Watch" "AirPods" "אחר" }}
     {{- range $categories }}

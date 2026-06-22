@@ -37,7 +37,7 @@
     }
 
     // Category chips
-    var filterBar = document.querySelector('.filter-bar:not(#condition-bar)');
+    var filterBar = document.getElementById('category-bar');
     if (filterBar) {
       filterBar.addEventListener('click', function (e) {
         var chip = e.target.closest('.chip');
