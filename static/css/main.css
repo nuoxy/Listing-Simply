@@ -100,6 +100,12 @@ button { font-family: var(--font); cursor: pointer; border: none; background: no
 }
 .logo-icon { font-size: 1.3rem; line-height: 1; }
 
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .btn-post {
   background: var(--accent);
   color: #fff;
@@ -110,6 +116,33 @@ button { font-family: var(--font); cursor: pointer; border: none; background: no
   white-space: nowrap;
 }
 .btn-post:active { opacity: .8; }
+
+/* ── Theme toggle ────────────────────────────────────────── */
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--card);
+  border: 1px solid var(--border);
+  color: var(--text);
+}
+.theme-toggle:active { opacity: .7; }
+.theme-toggle svg { width: 17px; height: 17px; }
+
+.icon-moon { display: none; }
+
+@media (prefers-color-scheme: dark) {
+  .icon-sun  { display: none; }
+  .icon-moon { display: block; }
+}
+:root[data-theme="dark"]  .icon-sun  { display: none; }
+:root[data-theme="dark"]  .icon-moon { display: block; }
+:root[data-theme="light"] .icon-sun  { display: block; }
+:root[data-theme="light"] .icon-moon { display: none; }
 
 /* ── Main / Page wrappers ────────────────────────────────── */
 #main { padding: 0 12px 24px; }
