@@ -109,13 +109,13 @@
 {{- end }}
 
 {{/* ── JSON-LD: Product (individual listing pages) ────────── */}}
-{{- if eq .Section "listings" }}
+{{- if and .IsPage (eq .Section "listings") }}
 {{- $condSchema := "https://schema.org/UsedCondition" }}
 {{- if eq .Params.condition "חדש" }}{{- $condSchema = "https://schema.org/NewCondition" }}{{- end }}
 {{- $priceNum   := .Params.price | replaceRE "[^\\d]" "" }}
 {{- $modelName  := .Params.model | default .Title }}
 {{- $storagePart := "" }}{{- with .Params.storage }}{{- $storagePart = print " " . }}{{- end }}
-{{- $fullModel  := print $modelName $storagePart | strings.TrimSpace }}
+{{- $fullModel  := print $modelName $storagePart }}
 {{- $ldOffer := dict
   "@type"         "Offer"
   "price"         $priceNum

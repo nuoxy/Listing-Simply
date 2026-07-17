@@ -1,0 +1,26 @@
+{{ define "main" }}
+{{- $catHebrew := dict
+  "iPhone"      "אייפון יד שנייה"
+  "iPad"        "אייפד יד שנייה"
+  "Mac"         "מקבוק יד שנייה"
+  "Apple Watch" "אפל ווטש יד שנייה"
+  "AirPods"     "אירפודס יד שנייה"
+  "אחר"         "אביזרי Apple יד שנייה"
+}}
+
+<div class="page-home">
+  <div class="hero">
+    <h1 class="hero-title">קטגוריות מוצרי Apple יד שנייה</h1>
+    <p class="hero-sub">בחרו קטגוריה לצפייה במודעות</p>
+  </div>
+
+  <a href="{{ "/" | relURL }}" class="back-link cat-back">← כל המודעות</a>
+
+  <nav class="seo-cat-nav" aria-label="כל הקטגוריות">
+    {{- range .Data.Terms.Alphabetical }}
+    {{- $label := index $catHebrew .Name | default .Name }}
+    <a href="{{ .Page.RelPermalink }}" class="seo-cat-link">{{ $label }} ({{ .Count }})</a>
+    {{- end }}
+  </nav>
+</div>
+{{ end }}
