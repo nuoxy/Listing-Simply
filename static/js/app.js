@@ -1,6 +1,24 @@
 (function () {
   'use strict';
 
+  // ── Theme toggle ──────────────────────────────────────────
+  var themeToggle = document.getElementById('theme-toggle');
+  if (themeToggle) {
+    function setTheme(theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+      try { localStorage.setItem('theme', theme); } catch (e) {}
+      var meta = document.querySelector('meta[name="theme-color"]');
+      if (meta) meta.setAttribute('content', theme === 'dark' ? '#131210' : '#F2F0EB');
+    }
+    themeToggle.addEventListener('click', function () {
+      var current = document.documentElement.getAttribute('data-theme');
+      var isDark = current
+        ? current === 'dark'
+        : (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+      setTheme(isDark ? 'light' : 'dark');
+    });
+  }
+
   // ── Unified filter + sort ─────────────────────────────────
   var grid = document.getElementById('listings-grid');
   if (grid) {

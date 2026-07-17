@@ -3,22 +3,28 @@ languageCode = "he"
 defaultContentLanguage = "he"
 title = "ListingSimply"
 enableRobotsTXT = true
-disableKinds = ["taxonomy", "term", "RSS"]
+disableKinds = ["RSS"]
 paginate = 20
 
 [params]
-  siteName      = "ListingSimply"
-  tagline       = "מוצרי Apple יד שנייה — ישראל"
-  description   = "לקנות ולמכור מכשירי Apple בישראל — בטוח, פשוט, ללא הרשמה"
+  siteName         = "ListingSimply"
+  tagline          = "מוצרי Apple יד שנייה — ישראל"
+  description      = "לוח מודעות מוצרי Apple יד שנייה בישראל — iPhone, iPad, Mac, AirPods ועוד. קנו ומכרו ישירות בין פרטיים, ללא דמי תיווך ובחינם."
   adminTelegram    = "@listingsimply_admin"
   listingDays      = 15
   cloudinaryCloud  = "your-cloud-name"
   cloudinaryPreset = "your-unsigned-preset"
+  canonicalBase    = "https://listingsimply.com"
+
+[taxonomies]
+  category = "categories"
 
 [markup.goldmark.renderer]
   unsafe = true
 
 [outputs]
-  home    = ["HTML"]
-  page    = ["HTML"]
-  section = ["HTML"]
+  home     = ["HTML", "Sitemap"]
+  page     = ["HTML"]
+  section  = ["HTML"]
+  taxonomy = ["HTML"]
+  term     = ["HTML"]

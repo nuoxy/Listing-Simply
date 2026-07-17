@@ -56,6 +56,30 @@
     {{- end }}
   </div>
 
+  <!-- SEO category links — crawlable by Google, useful for users -->
+  {{- $catLinks := slice
+    (slice "iphone"      "iPhone"      "אייפון יד שנייה")
+    (slice "ipad"        "iPad"        "אייפד יד שנייה")
+    (slice "mac"         "Mac"         "מקבוק יד שנייה")
+    (slice "apple-watch" "Apple Watch" "אפל ווטש יד שנייה")
+    (slice "airpods"     "AirPods"     "אירפודס יד שנייה")
+  }}
+  {{- $hasLinks := false }}
+  {{- range $catLinks }}
+    {{- if ($.Site.GetPage (printf "/categories/%s" (index . 0))) }}{{- $hasLinks = true }}{{- end }}
+  {{- end }}
+  {{- if $hasLinks }}
+  <nav class="seo-cat-nav" aria-label="דפדוף לפי קטגוריה">
+    {{- range $catLinks }}
+      {{- $slug  := index . 0 }}
+      {{- $label := index . 2 }}
+      {{- with $.Site.GetPage (printf "/categories/%s" $slug) }}
+      <a href="{{ .RelPermalink }}" class="seo-cat-link">{{ $label }}</a>
+      {{- end }}
+    {{- end }}
+  </nav>
+  {{- end }}
+
   <!-- Listings grid — Hugo's expiryDate already excludes expired pages -->
   {{- if $active }}
   <div class="listings-grid" id="listings-grid">

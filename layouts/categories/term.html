@@ -1,0 +1,56 @@
+{{ define "main" }}
+{{- $catHebrew := dict
+  "iPhone"      "אייפון יד שנייה"
+  "iPad"        "אייפד יד שנייה"
+  "Mac"         "מקבוק יד שנייה"
+  "Apple Watch" "אפל ווטש יד שנייה"
+  "AirPods"     "אירפודס יד שנייה"
+  "אחר"         "אביזרי Apple יד שנייה"
+}}
+{{- $catIntro := dict
+  "iPhone"      "כל הצעות האייפון יד שנייה בישראל — iPhone 16 Pro, 15, 14, 13, 12 ועוד. ממוכרים פרטיים, ישירות, בלי תיווך ובלי עמלות."
+  "iPad"        "אייפד יד שנייה למכירה בישראל — iPad Air, iPad Pro, iPad mini ו-iPad הרגיל. מוכרים פרטיים, ישירות, ללא תיווך."
+  "Mac"         "מקבוק ומחשבי Mac יד שנייה בישראל — MacBook Air M3/M2, MacBook Pro, iMac, Mac mini. מחשבי Apple ממוכרים פרטיים."
+  "Apple Watch" "אפל ווטש יד שנייה בישראל — Apple Watch Series 10, 9, Ultra 2, SE. שעוני Apple ממוכרים פרטיים, ישירות."
+  "AirPods"     "אירפודס יד שנייה בישראל — AirPods Pro 2, AirPods 4, AirPods Max. אוזניות Apple ממוכרים פרטיים בישראל."
+  "אחר"         "אביזרי Apple יד שנייה בישראל — מטענים MagSafe, כיסויים, מקלדות Magic Keyboard ועוד אביזרים מקוריים."
+}}
+
+{{- $hebrewTitle := index $catHebrew .Title | default (print .Title " יד שנייה") }}
+{{- $intro        := index $catIntro  .Title | default "" }}
+
+{{- $active := where .Pages "Params.approved" true }}
+
+<div class="page-home">
+
+  <div class="hero">
+    <h1 class="hero-title">{{ $hebrewTitle }}</h1>
+    {{- with $intro }}
+    <p class="hero-sub">{{ . }}</p>
+    {{- end }}
+  </div>
+
+  <a href="{{ "/" | relURL }}" class="back-link cat-back">← כל הקטגוריות</a>
+
+  {{- if $active }}
+  <div class="listings-grid" id="listings-grid">
+    {{- range sort $active "Date" "desc" }}
+      {{ partial "listing-card.html" . }}
+    {{- end }}
+  </div>
+  <div id="no-results" class="empty-state" style="display:none">
+    <p class="empty-icon">🔍</p>
+    <p class="empty-title">אין תוצאות</p>
+    <p class="empty-sub">נסה לשנות את פרמטרי החיפוש</p>
+  </div>
+  {{- else }}
+  <div class="empty-state">
+    <p class="empty-icon">📭</p>
+    <p class="empty-title">אין מודעות פעילות בקטגוריה זו</p>
+    <p class="empty-sub">עיין בכל הקטגוריות או חזור מאוחר יותר</p>
+    <a href="{{ "/" | relURL }}" class="btn btn-primary">לכל המודעות</a>
+  </div>
+  {{- end }}
+
+</div>
+{{ end }}

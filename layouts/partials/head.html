@@ -1,33 +1,173 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="theme-color" content="#f5f5f7">
+<meta name="theme-color" content="#F2F0EB">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="format-detection" content="telephone=no">
 
-<title>
-  {{- if .IsHome }}{{ .Site.Params.siteName }} | {{ .Site.Params.tagline }}
-  {{- else }}{{ .Title }} | {{ .Site.Params.siteName }}
-  {{- end -}}
-</title>
+<!-- Apply saved theme before first paint (no flash of wrong theme) -->
+<script>
+(function () {
+  try {
+    var stored = localStorage.getItem('theme');
+    if (stored === 'dark' || stored === 'light') {
+      document.documentElement.setAttribute('data-theme', stored);
+    }
+    var systemDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    var effective = stored || (systemDark ? 'dark' : 'light');
+    var meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute('content', effective === 'dark' ? '#131210' : '#F2F0EB');
+  } catch (e) {}
+})();
+</script>
 
-<meta name="description" content="{{ with .Params.description }}{{ . }}{{ else }}{{ .Site.Params.description }}{{ end }}">
-<meta name="robots" content="index, follow">
+{{/* ── SEO helpers ─────────────────────────────────────────── */}}
+{{- $base := .Site.Params.canonicalBase | default "" }}
+{{- $canonicalURL := print $base .RelPermalink }}
 
-{{- with .Params.listing_no }}
-<meta name="listing-no" content="{{ . }}">
+{{/* ── Hebrew category label & description maps ────────────── */}}
+{{- $catHebrew := dict
+  "iPhone"      "אייפון יד שנייה"
+  "iPad"        "אייפד יד שנייה"
+  "Mac"         "מקבוק יד שנייה"
+  "Apple Watch" "אפל ווטש יד שנייה"
+  "AirPods"     "אירפודס יד שנייה"
+  "אחר"         "אביזרי Apple יד שנייה"
+}}
+{{- $catDesc := dict
+  "iPhone"      "קנו ומכרו אייפון יד שנייה בישראל — iPhone 16, 15, 14, 13 Pro, Max ועוד. מפרטיים ישירות, ללא עמלות ובחינם."
+  "iPad"        "אייפד יד שנייה למכירה בישראל — iPad Air, iPad Pro, iPad mini ו-iPad רגיל. מציאות אמיתיות מפרטיים."
+  "Mac"         "מקבוק יד שנייה בישראל — MacBook Air M2/M3, MacBook Pro, iMac, Mac mini. מחשבי Apple משומשים."
+  "Apple Watch" "אפל ווטש יד שנייה בישראל — Apple Watch Series 10, 9, Ultra 2, SE. שעוני Apple מפרטיים."
+  "AirPods"     "אירפודס יד שנייה בישראל — AirPods Pro 2, AirPods 4, AirPods Max. אוזניות Apple מפרטיים."
+  "אחר"         "אביזרי Apple יד שנייה בישראל — מטענים MagSafe, כיסויים, מקלדות Magic Keyboard ועוד מקוריים."
+}}
+
+{{/* ── Build <title> ──────────────────────────────────────── */}}
+{{- $pageTitle := "" }}
+{{- if .IsHome }}
+  {{- $pageTitle = print .Site.Params.siteName " — מוצרי Apple יד שנייה | iPhone · iPad · Mac | ישראל" }}
+{{- else if eq .Kind "term" }}
+  {{- $hebrew := index $catHebrew .Title | default (print .Title " יד שנייה") }}
+  {{- $pageTitle = print $hebrew " למכירה בישראל | " .Site.Params.siteName }}
+{{- else if eq .Kind "taxonomy" }}
+  {{- $pageTitle = print "קטגוריות מוצרי Apple יד שנייה | " .Site.Params.siteName }}
+{{- else if eq .Section "listings" }}
+  {{- $pricePart := "" }}{{- with .Params.price }}{{- $pricePart = print " | " . }}{{- end }}
+  {{- $locPart   := "" }}{{- with .Params.location }}{{- $locPart = print " | " . }}{{- end }}
+  {{- $pageTitle = print .Title $pricePart $locPart " | " .Site.Params.siteName }}
+{{- else }}
+  {{- $pageTitle = print .Title " | " .Site.Params.siteName }}
 {{- end }}
 
+<title>{{ $pageTitle }}</title>
+
+{{/* ── Build meta description ──────────────────────────────── */}}
+{{- $metaDesc := .Site.Params.description }}
+{{- if .IsHome }}
+  {{- $metaDesc = "לוח מודעות מוצרי Apple יד שנייה בישראל. קנו ומכרו iPhone, iPad, MacBook, Apple Watch ו-AirPods ישירות בין פרטיים — ללא הרשמה, ללא עמלות, בחינם." }}
+{{- else if eq .Kind "term" }}
+  {{- $metaDesc = index $catDesc .Title | default (print (index $catHebrew .Title | default .Title) " יד שנייה למכירה בישראל — מוצרי Apple מפרטיים.") }}
+{{- else if eq .Section "listings" }}
+  {{- $m  := "" }}{{- with .Params.model   }}{{- $m  = .  }}{{- else }}{{- $m = $.Title }}{{- end }}
+  {{- $st := "" }}{{- with .Params.storage  }}{{- $st = print " " .  }}{{- end }}
+  {{- $l  := "" }}{{- with .Params.location }}{{- $l  = print " ב" . }}{{- end }}
+  {{- $c  := "" }}{{- with .Params.condition}}{{- $c  = print ". מצב: " . }}{{- end }}
+  {{- $p  := "" }}{{- with .Params.price    }}{{- $p  = print ". מחיר: " . }}{{- end }}
+  {{- $metaDesc = print $m $st " יד שנייה למכירה" $l $c $p }}
+{{- end }}
+
+<meta name="description" content="{{ $metaDesc }}">
+<meta name="robots" content="index, follow">
+
+{{/* ── OG image (first listing photo when available) ─────── */}}
+{{- $ogImage := "" }}
+{{- with .Params.images }}{{- with index . 0 }}{{- $ogImage = . }}{{- end }}{{- end }}
+
 <!-- Open Graph -->
-<meta property="og:type" content="website">
-<meta property="og:site_name" content="{{ .Site.Params.siteName }}">
-<meta property="og:title" content="{{ .Title }}">
-<meta property="og:description" content="{{ with .Params.description }}{{ . }}{{ else }}{{ .Site.Params.description }}{{ end }}">
-<meta property="og:locale" content="he_IL">
+<meta property="og:type"        content="website">
+<meta property="og:site_name"   content="{{ .Site.Params.siteName }}">
+<meta property="og:title"       content="{{ $pageTitle }}">
+<meta property="og:description" content="{{ $metaDesc }}">
+<meta property="og:locale"      content="he_IL">
+<meta property="og:url"         content="{{ $canonicalURL }}">
+{{- with $ogImage }}
+<meta property="og:image"       content="{{ . }}">
+<meta property="og:image:alt"   content="{{ $.Title }}">
+{{- end }}
 
-<link rel="canonical" href="{{ .Permalink }}">
+<!-- Twitter / X Card -->
+<meta name="twitter:card"        content="{{ if $ogImage }}summary_large_image{{ else }}summary{{ end }}">
+<meta name="twitter:title"       content="{{ $pageTitle }}">
+<meta name="twitter:description" content="{{ $metaDesc }}">
+{{- with $ogImage }}
+<meta name="twitter:image"       content="{{ . }}">
+{{- end }}
 
-<!-- Favicon: Apple  -->
+<link rel="canonical" href="{{ $canonicalURL }}">
+
+{{/* ── JSON-LD: WebSite (homepage) ─────────────────────────── */}}
+{{- if .IsHome }}
+{{- $ldWebsite := dict
+  "@context"    "https://schema.org"
+  "@type"       "WebSite"
+  "name"        .Site.Params.siteName
+  "url"         (print $base "/")
+  "description" .Site.Params.description
+  "inLanguage"  "he-IL"
+  "potentialAction" (dict
+    "@type"       "SearchAction"
+    "target"      (dict "@type" "EntryPoint" "urlTemplate" (print $base "/?s={search_term_string}"))
+    "query-input" "required name=search_term_string"
+  )
+}}
+<script type="application/ld+json">{{ $ldWebsite | jsonify }}</script>
+{{- end }}
+
+{{/* ── JSON-LD: Product (individual listing pages) ────────── */}}
+{{- if and .IsPage (eq .Section "listings") }}
+{{- $condSchema := "https://schema.org/UsedCondition" }}
+{{- if eq .Params.condition "חדש" }}{{- $condSchema = "https://schema.org/NewCondition" }}{{- end }}
+{{- $priceNum   := .Params.price | replaceRE "[^\\d]" "" }}
+{{- $modelName  := .Params.model | default .Title }}
+{{- $storagePart := "" }}{{- with .Params.storage }}{{- $storagePart = print " " . }}{{- end }}
+{{- $fullModel  := print $modelName $storagePart }}
+{{- $ldOffer := dict
+  "@type"         "Offer"
+  "price"         $priceNum
+  "priceCurrency" "ILS"
+  "availability"  "https://schema.org/InStock"
+  "itemCondition" $condSchema
+  "areaServed"    "IL"
+  "seller"        (dict "@type" "Person")
+}}
+{{- $ldProduct := dict
+  "@context" "https://schema.org"
+  "@type"    "Product"
+  "name"     $fullModel
+  "brand"    (dict "@type" "Brand" "name" "Apple")
+  "offers"   $ldOffer
+}}
+{{- with .Params.images }}{{- $ldProduct = merge $ldProduct (dict "image" .) }}{{- end }}
+{{- with .Summary | plainify | truncate 200 }}{{- $ldProduct = merge $ldProduct (dict "description" .) }}{{- end }}
+<script type="application/ld+json">{{ $ldProduct | jsonify }}</script>
+{{- end }}
+
+{{/* ── JSON-LD: BreadcrumbList (category term pages) ─────── */}}
+{{- if eq .Kind "term" }}
+{{- $hebrew := index $catHebrew .Title | default (print .Title " יד שנייה") }}
+{{- $ldBreadcrumb := dict
+  "@context" "https://schema.org"
+  "@type"    "BreadcrumbList"
+  "itemListElement" (slice
+    (dict "@type" "ListItem" "position" 1 "name" .Site.Params.siteName "item" (print $base "/"))
+    (dict "@type" "ListItem" "position" 2 "name" $hebrew                "item" $canonicalURL)
+  )
+}}
+<script type="application/ld+json">{{ $ldBreadcrumb | jsonify }}</script>
+{{- end }}
+
+<!-- Favicon -->
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍎</text></svg>">
 
 <link rel="stylesheet" href="{{ "css/main.css" | absURL }}">
