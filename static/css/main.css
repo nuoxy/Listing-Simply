@@ -5,13 +5,13 @@
   --bg:          #F2F0EB;
   --card:        #FFFFFF;
   --text:        #1A1917;
-  --sub:         #87847E;
+  --sub:         #6E6B65;
   --accent:      #2563EB;
   --telegram:    #0088cc;
   --border:      #E0DDD7;
-  --green:       #16A34A;
+  --green:       #157F3C;
   --red:         #DC2626;
-  --orange:      #EA580C;
+  --orange:      #B45309;
   --radius:      14px;
   --radius-sm:   8px;
   --shadow:      0 1px 3px rgba(0,0,0,.06), 0 2px 8px rgba(0,0,0,.04);
@@ -19,6 +19,9 @@
   --max:         430px;
 }
 
+/* --sub/--green/--orange differ by theme: each pair is tuned to hit
+   WCAG AA (4.5:1) against --card in its own theme; a single value
+   can't clear that bar on both a near-white and a near-black card. */
 @media (prefers-color-scheme: dark) {
   :root {
     --bg:     #131210;
@@ -27,6 +30,8 @@
     --sub:    #908D87;
     --border: #2B2926;
     --shadow: 0 1px 4px rgba(0,0,0,.4);
+    --green:  #16A34A;
+    --orange: #EA580C;
   }
 }
 :root[data-theme="dark"] {
@@ -36,14 +41,18 @@
   --sub:    #908D87;
   --border: #2B2926;
   --shadow: 0 1px 4px rgba(0,0,0,.4);
+  --green:  #16A34A;
+  --orange: #EA580C;
 }
 :root[data-theme="light"] {
   --bg:     #F2F0EB;
   --card:   #FFFFFF;
   --text:   #1A1917;
-  --sub:    #87847E;
+  --sub:    #6E6B65;
   --border: #E0DDD7;
   --shadow: 0 1px 3px rgba(0,0,0,.06), 0 2px 8px rgba(0,0,0,.04);
+  --green:  #157F3C;
+  --orange: #B45309;
 }
 
 html {
@@ -52,7 +61,9 @@ html {
   background: var(--bg);
   color: var(--text);
   -webkit-text-size-adjust: 100%;
-  scroll-behavior: smooth;
+}
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
 }
 
 body {
@@ -65,6 +76,14 @@ body {
 a { color: inherit; text-decoration: none; }
 img { max-width: 100%; height: auto; display: block; }
 button { font-family: var(--font); cursor: pointer; border: none; background: none; }
+
+/* ── Focus visibility (keyboard navigation only) ─────────── */
+a:focus-visible,
+button:focus-visible,
+summary:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
 
 /* ── Site Header ─────────────────────────────────────────── */
 .site-header {
@@ -114,6 +133,7 @@ button { font-family: var(--font); cursor: pointer; border: none; background: no
   padding: 7px 14px;
   border-radius: 20px;
   white-space: nowrap;
+  transition: transform .15s ease, filter .15s ease;
 }
 .btn-post:active { opacity: .8; }
 
@@ -192,6 +212,9 @@ button { font-family: var(--font); cursor: pointer; border: none; background: no
   outline: none;
   border-color: var(--accent);
 }
+#listing-search:focus-visible {
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, .25);
+}
 #listing-search::placeholder { color: var(--sub); }
 
 /* ── Sort + Location row ─────────────────────────────────── */
@@ -219,6 +242,10 @@ button { font-family: var(--font); cursor: pointer; border: none; background: no
 #location-select:focus {
   outline: none;
   border-color: var(--accent);
+}
+#sort-select:focus-visible,
+#location-select:focus-visible {
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, .25);
 }
 
 /* ── Filter chips ────────────────────────────────────────── */
@@ -271,8 +298,7 @@ button { font-family: var(--font); cursor: pointer; border: none; background: no
   background: var(--card);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
-  overflow: hidden;
-  transition: transform .15s;
+  transition: transform .2s ease, box-shadow .2s ease;
 }
 .listing-card:active { transform: scale(.97); }
 
@@ -280,13 +306,20 @@ button { font-family: var(--font); cursor: pointer; border: none; background: no
   display: flex;
   flex-direction: column;
   color: inherit;
+  border-radius: var(--radius);
+}
+.card-link:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
-/* 1:1 square image */
+/* 1:1 square image — clipped here (not on .listing-card) so a focus
+   ring on .card-link is never cut off by an ancestor's overflow:hidden */
 .card-img {
   position: relative;
   aspect-ratio: 1 / 1;
   overflow: hidden;
+  border-radius: var(--radius) var(--radius) 0 0;
   background: var(--border);
 }
 .card-img img {
@@ -294,6 +327,15 @@ button { font-family: var(--font); cursor: pointer; border: none; background: no
   height: 100%;
   object-fit: cover;
   display: block;
+  transition: transform .3s ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .listing-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 10px rgba(0,0,0,.1), 0 8px 20px rgba(0,0,0,.06);
+  }
+  .listing-card:hover .card-img img { transform: scale(1.04); }
 }
 .card-no-img {
   width: 100%;
@@ -368,8 +410,8 @@ button { font-family: var(--font); cursor: pointer; border: none; background: no
   letter-spacing: .02em;
 }
 .badge-category {
-  background: #e8f0fe;
-  color: #1a56db;
+  background: rgba(37, 99, 235, .12);
+  color: var(--accent);
 }
 
 /* ── Empty State ─────────────────────────────────────────── */
@@ -395,13 +437,21 @@ button { font-family: var(--font); cursor: pointer; border: none; background: no
   border: none;
   width: 100%;
   text-align: center;
-  transition: opacity .15s;
+  transition: opacity .15s, transform .15s ease, filter .15s ease;
 }
 .btn:active { opacity: .8; }
 
 .btn-primary {
   background: var(--accent);
   color: #fff;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .btn-post:hover,
+  .btn-primary:hover {
+    filter: brightness(1.1);
+    transform: translateY(-1px);
+  }
 }
 .btn-contact {
   background: var(--telegram);
@@ -601,6 +651,7 @@ details[open] .sold-summary::before { content: "▾ "; }
   color: var(--text);
 }
 .sold-input:focus { outline: none; border-color: var(--accent); }
+.sold-input:focus-visible { box-shadow: 0 0 0 3px rgba(37, 99, 235, .25); }
 .btn-sold {
   background: var(--red);
   color: #fff;
@@ -672,6 +723,11 @@ details[open] .sold-summary::before { content: "▾ "; }
 .form-group textarea:focus {
   outline: none;
   border-color: var(--accent);
+}
+.form-group input:focus-visible,
+.form-group select:focus-visible,
+.form-group textarea:focus-visible {
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, .25);
 }
 
 .form-group textarea { resize: vertical; min-height: 110px; }
@@ -826,7 +882,6 @@ details[open] .sold-summary::before { content: "▾ "; }
   line-height: 1;
 }
 
-
 /* ── Upload Button & Preview Strip ──────────────────────── */
 .upload-btn {
   background: var(--card);
@@ -920,3 +975,19 @@ details[open] .sold-summary::before { content: "▾ "; }
 
 /* ── Tap highlight ───────────────────────────────────────── */
 * { -webkit-tap-highlight-color: transparent; }
+
+/* ── Reduced motion ──────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .listing-card,
+  .card-img img,
+  .btn,
+  .btn-post {
+    transition: none;
+  }
+  .listing-card:hover,
+  .listing-card:hover .card-img img,
+  .btn-post:hover,
+  .btn-primary:hover {
+    transform: none;
+  }
+}
